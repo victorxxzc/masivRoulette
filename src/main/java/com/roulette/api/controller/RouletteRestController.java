@@ -53,7 +53,11 @@ public class RouletteRestController {
 		response.put(Constants.ROULETTE, roulette);
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
-
+	/**
+	 * Method to open a roulette
+	 * @param id, roulette
+	 * @return ResponseDTO
+	 */
 	@PutMapping(Constants.OPEN_ROULETTE)
 	public ResponseEntity<?> openRoulette(@PathVariable("id") Long id) {
 		Map<String, Object> response = new HashMap<>();
@@ -70,10 +74,25 @@ public class RouletteRestController {
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 		
 	}
-
+	/**
+	 * Betting method
+	 * @param betDTO, to generate the bet
+	 * @return ResponseDTO
+	 */
 	@PostMapping(Constants.BET_ROULETTE_WAGER)
-	public ResponseDTO placeBet(@RequestBody BetDTO betDTO) {
-		return serviceBet.placeBet(betDTO);
+	public ResponseEntity<?> placeBet(@RequestBody BetDTO betDTO) {
+		Map<String, Object> response = new HashMap<>();
+		ResponseDTO responseDto = new ResponseDTO();
+		try {
+			responseDto = serviceBet.placeBet(betDTO);
+		} catch (DataAccessException e) {
+			response.put(Constants.MSG, Constants.MSG_BAD_REQUEST);
+			response.put(Constants.ERROR, e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);	
+		}
+		response.put(Constants.MSG, Constants.RESPONSE_OK);
+		response.put(Constants.ROULETTE, responseDto);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 //
 //	@PutMapping(Constants.CLOSE_ROULETTE)

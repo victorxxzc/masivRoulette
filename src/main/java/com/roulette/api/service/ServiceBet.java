@@ -41,12 +41,7 @@ public class ServiceBet {
 			boolean isValidBet = isValidBet(betDTO);
 			if(isValidBet && userBets) {
 				response = saveBet(betDTO);
-				response.setOutputMessage(Constants.SUCCESS_OPERATION);
-				response.setStatusCode(Constants.STATUS_OK);
-			} else {
-				response.setOutputMessage(Constants.FAILED_OPERATION);
-				response.setStatusCode(Constants.BAD_REQUEST);
-			}
+			} 
 		}
 
 		return response;
@@ -107,11 +102,11 @@ public class ServiceBet {
 	}
 	public ResponseDTO saveBet(BetDTO betDTO) {
 		Roulette roulette = rouletteRepository.findById(betDTO.getIdRoulette()).get();
-		ResponseDTO outputDTO = new ResponseDTO();
+		ResponseDTO response = new ResponseDTO();
 		Bet bet = objectMapper.convertValue(betDTO, Bet.class);
 		roulette.addBetToList(bet);
 		rouletteRepository.save(roulette);
 
-		return outputDTO;
+		return response;
 	}
 }
