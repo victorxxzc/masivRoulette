@@ -26,30 +26,30 @@ import com.roulette.api.util.Constants;
 @Service
 public class ServiceBet {
 	@Autowired
-	private RouletteRepository repositoryMain;
+	private RouletteRepository rouletteRepository;
 	@Autowired
 	ObjectMapper objectMapper;
 	@Autowired
 	HttpServletRequest servletRequest;
 	public ResponseDTO placeBet(BetDTO betDTO) {
-		ResponseDTO output = new ResponseDTO();
+		ResponseDTO response = new ResponseDTO();
 		String rouletteStatus = findRouletteStatus(betDTO.getIdRoulette());
-		Optional<Roulette> roulette = repositoryMain.findById(betDTO.getIdRoulette()); 
+		Optional<Roulette> roulette = rouletteRepository.findById(betDTO.getIdRoulette()); 
 		betDTO.setIdUser(servletRequest.getHeader("idUser"));
 		boolean userBets = findUserBets(roulette, betDTO.getIdUser());
 		if (rouletteStatus.equals(Constants.OPEN)){
 			boolean isValidBet = isValidBet(betDTO);
 			if(isValidBet && userBets) {
-				output = saveBet(betDTO);
-				output.setOutputMessage(Constants.SUCCESS_OPERATION);
-				output.setStatusCode(Constants.STATUS_OK);
+				response = saveBet(betDTO);
+				response.setOutputMessage(Constants.SUCCESS_OPERATION);
+				response.setStatusCode(Constants.STATUS_OK);
 			} else {
-				output.setOutputMessage(Constants.FAILED_OPERATION);
-				output.setStatusCode(Constants.BAD_REQUEST);
+				response.setOutputMessage(Constants.FAILED_OPERATION);
+				response.setStatusCode(Constants.BAD_REQUEST);
 			}
 		}
 
-		return output;
+		return response;
 	}
 	private boolean findUserBets(Optional<Roulette> roulette, String idUser) {
 		boolean isValid = false;
@@ -75,7 +75,7 @@ public class ServiceBet {
 	    return cant;
 	}
 	public String findRouletteStatus(Long id) {
-		Optional<Roulette> roulette = repositoryMain.findById(id);
+		Optional<Roulette> roulette = rouletteRepository.findById(id);
 		String status = Constants.CLOSED;
 		if (roulette.isPresent() && roulette.get().getStatus().equals(Constants.OPEN)) {		
 				status = Constants.OPEN;
@@ -106,11 +106,11 @@ public class ServiceBet {
 		return betDTO.getNumber() >= 0 && betDTO.getNumber() <= 36 ? true : false;
 	}
 	public ResponseDTO saveBet(BetDTO betDTO) {
-		Roulette roulette = repositoryMain.findById(betDTO.getIdRoulette()).get();
+		Roulette roulette = rouletteRepository.findById(betDTO.getIdRoulette()).get();
 		ResponseDTO outputDTO = new ResponseDTO();
 		Bet bet = objectMapper.convertValue(betDTO, Bet.class);
 		roulette.addBetToList(bet);
-		repositoryMain.save(roulette);
+		rouletteRepository.save(roulette);
 
 		return outputDTO;
 	}

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,28 +39,22 @@ public class ServiceRoulette {
 
 		return response.getIdRoulette();
 	}
-//	public ResponseDTO openRoulette(Long id) {
-//		ResponseDTO outputDTO = new ResponseDTO();
-//		Optional<Roulette> roulette = rouletteRepository.findById(id);
-//		if (roulette.isPresent()) {
-//			Roulette request = roulette.get();
-//			rouletteClosed(request);
-//			request.setStatus(Constants.OPEN);
-//			rouletteRepository.save(request);
-//			outputDTO.setOutputMessage(Constants.SUCCESS_OPERATION);
-//			outputDTO.setStatusCode(Constants.STATUS_OK);
-//		} else {
-//			outputDTO.setOutputMessage(Constants.FAILED_OPERATION);
-//			outputDTO.setStatusCode(Constants.BAD_REQUEST);
-//		}
-//
-//		return outputDTO;
-//	}
-//	private void rouletteClosed(Roulette request) {
-//		if (request.getStatus().equals(Constants.CLOSED)) {
-//			request.setBetList(null);
-//		}
-//	}
+	public ResponseDTO openRoulette(Long id) {
+		ResponseDTO response = new ResponseDTO();
+		Optional<Roulette> roulette = rouletteRepository.findById(id);
+		if (roulette.isPresent()) {
+			Roulette request = roulette.get();
+			rouletteClosed(request);
+			request.setStatus(Constants.OPEN);
+			rouletteRepository.save(request);
+		}
+		return response;
+	}
+	private void rouletteClosed(Roulette request) {
+		if (request.getStatus().equals(Constants.CLOSED)) {
+			request.setBetList(null);
+		}
+	}
 //	public ResponseDTO closeRoulette(Long id) {
 //		Optional<Roulette> optionalRoulette = rouletteRepository.findById(id);
 //		ResponseDTO output = new ResponseDTO();
