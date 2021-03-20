@@ -122,9 +122,14 @@ public class RouletteRestController {
 
 	}
 
-//	@GetMapping(Constants.GET_ROULETTES)
-//	public List<RouletteDTO> listRoulettes() {
-//
-//		return serviceRoulette.listRoulettes();
-//	}
+	/**
+	 * Method to list roulette
+	 * 
+	 * @return
+	 */
+	@GetMapping(Constants.GET_ROULETTES)
+	public List<RouletteDTO> listRoulettes() {
+
+		return serviceRoulette.listRoulettes();
+	}
 }

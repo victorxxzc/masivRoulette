@@ -5,8 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+
 /**
- *Redis configuration
+ * Redis configuration
+ * 
  * @author Victor Buritica
  *
  */
@@ -18,6 +20,7 @@ public class RedisSetup {
 
 		return new LettuceConnectionFactory();
 	}
+
 	@Bean
 	public RedisTemplate<?, ?> redisTemplate() {
 		RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();

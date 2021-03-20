@@ -1,6 +1,8 @@
 package com.roulette.api.util;
+
 /**
- *Constans
+ * Constans
+ * 
  * @author Victor Buritica
  *
  */

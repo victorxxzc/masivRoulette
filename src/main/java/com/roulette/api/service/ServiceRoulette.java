@@ -23,8 +23,10 @@ import com.roulette.api.model.Bet;
 import com.roulette.api.model.Roulette;
 import com.roulette.api.repository.RouletteRepository;
 import com.roulette.api.util.Constants;
+
 /**
  * The operation of the roulette
+ * 
  * @author Victor Buritica
  *
  */
@@ -34,12 +36,14 @@ public class ServiceRoulette {
 	private RouletteRepository rouletteRepository;
 	@Autowired
 	ObjectMapper objectMapper;
+
 	public Long createRoulette() {
 		Roulette roulette = new Roulette(Constants.CLOSED);
 		Roulette response = rouletteRepository.save(roulette);
 
 		return response.getIdRoulette();
 	}
+
 	public ResponseDTO openRoulette(Long id) {
 		ResponseDTO response = new ResponseDTO();
 		Optional<Roulette> roulette = rouletteRepository.findById(id);
@@ -51,11 +55,13 @@ public class ServiceRoulette {
 		}
 		return response;
 	}
+
 	private void rouletteClosed(Roulette request) {
 		if (request.getStatus().equals(Constants.CLOSED)) {
 			request.setBetList(null);
 		}
 	}
+
 	public ResponseDTO closeRoulette(Long id) {
 		Optional<Roulette> respoRoulette = rouletteRepository.findById(id);
 		ResponseDTO response = new ResponseDTO();
@@ -66,10 +72,11 @@ public class ServiceRoulette {
 			HashMap<Long, BetDTO> betsConnected = objectMapper.convertValue(roulette.getBetList(),
 					new TypeReference<HashMap<Long, BetDTO>>() {
 					});
-			response = chooseWinner(betsConnected);	
-		} 
+			response = chooseWinner(betsConnected);
+		}
 		return response;
 	}
+
 	private ResponseDTO chooseWinner(HashMap<Long, BetDTO> betsDTO) {
 		Long numbers = (long) (Math.random() * 36);
 		ResponseDTO response = new ResponseDTO();
@@ -79,49 +86,57 @@ public class ServiceRoulette {
 			winner((BetDTO) betDTO);
 			response.addWinner(winnerDTO);
 		}
-		
+
 		return response;
 	}
+
 	private WinnerDTO winner(BetDTO betDTO) {
 		WinnerDTO winnerDTO = new WinnerDTO();
 		boolean numberSelected = isNumberSelected(betDTO);
-		if(numberSelected && isWinnerNumber(betDTO)) {
-			winnerDTO = new WinnerDTO(betDTO.getIdUser(), betDTO.getMoney() * 5);		
-		}else if(isColorSelected(betDTO) && isWinnerColor(betDTO)) {
+		if (numberSelected && isWinnerNumber(betDTO)) {
+			winnerDTO = new WinnerDTO(betDTO.getIdUser(), betDTO.getMoney() * 5);
+		} else if (isColorSelected(betDTO) && isWinnerColor(betDTO)) {
 			winnerDTO = new WinnerDTO(betDTO.getIdUser(), betDTO.getMoney() * 1.8);
 		}
-		
+
 		return winnerDTO;
 	}
+
 	private boolean isWinnerNumber(BetDTO bet) {
 		Long numbers = (long) (Math.random() * 36);
-		
+
 		return bet.getNumber() == numbers ? true : false;
-	}	
+	}
+
 	private boolean isNumberSelected(BetDTO betDTO) {
-		
+
 		return betDTO.getNumber() != null ? true : false;
 	}
+
 	private boolean isWinnerColor(BetDTO betDTO) {
 		Long numbers = (long) (Math.random() * 36);
 		boolean winnerColor = false;
-		if(betDTO.getColor().equalsIgnoreCase(Constants.RED) && numbers % 2 != 0) {
+		if (betDTO.getColor().equalsIgnoreCase(Constants.RED) && numbers % 2 != 0) {
 			winnerColor = true;
-		} else if(betDTO.getColor().equalsIgnoreCase(Constants.RED) && numbers % 2 == 0) {
-			 winnerColor = true;
-		} 
-		
+		} else if (betDTO.getColor().equalsIgnoreCase(Constants.RED) && numbers % 2 == 0) {
+			winnerColor = true;
+		}
+
 		return winnerColor;
-	}	
+	}
+
 	private boolean isColorSelected(BetDTO betDTO) {
-		
+
 		return betDTO.getColor() != null ? true : false;
 	}
-	public List<RouletteDTO> listRoulettes() {		
-		List<Roulette> outputDTO = new ArrayList<>();
-		rouletteRepository.findAll().forEach(outputDTO::add);
-		List<RouletteDTO> response = outputDTO.stream().map(roulette -> {return new RouletteDTO(roulette.getIdRoulette(),roulette.getBetList(),roulette.getStatus());}).collect(Collectors.toList());
-		
+
+	public List<RouletteDTO> listRoulettes() {
+		List<Roulette> respoDto = new ArrayList<>();
+		rouletteRepository.findAll().forEach(respoDto::add);
+		List<RouletteDTO> response = respoDto.stream().map(roulette -> {
+			return new RouletteDTO(roulette.getIdRoulette(), roulette.getBetList(), roulette.getStatus());
+		}).collect(Collectors.toList());
+
 		return response;
 	}
 }
