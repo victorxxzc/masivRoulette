@@ -31,9 +31,9 @@ public class ServiceBet {
 	ObjectMapper objectMapper;
 	@Autowired
 	HttpServletRequest servletRequest;
-	public ResponseDTO placeBet(BetDTO betDTO) {
+	public ResponseDTO betRoulette(BetDTO betDTO) {
 		ResponseDTO response = new ResponseDTO();
-		String rouletteStatus = findRouletteStatus(betDTO.getIdRoulette());
+		String rouletteStatus = findStatus(betDTO.getIdRoulette());
 		Optional<Roulette> roulette = rouletteRepository.findById(betDTO.getIdRoulette()); 
 		betDTO.setIdUser(servletRequest.getHeader("idUser"));
 		boolean userBets = findUserBets(roulette, betDTO.getIdUser());
@@ -69,7 +69,7 @@ public class ServiceBet {
 	    
 	    return cant;
 	}
-	public String findRouletteStatus(Long id) {
+	public String findStatus(Long id) {
 		Optional<Roulette> roulette = rouletteRepository.findById(id);
 		String status = Constants.CLOSED;
 		if (roulette.isPresent() && roulette.get().getStatus().equals(Constants.OPEN)) {		

@@ -13,8 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_NULL)
 public class ResponseDTO {
-	private int statusCode;
-	private String outputMessage;
+	private String responseMessage;
 	private Long winnerNumber;
 	private HashMap<Long, BetDTO> betsConnected;
 	private List<WinnerDTO> winners;
@@ -22,19 +21,12 @@ public class ResponseDTO {
 		betsConnected = new HashMap<>();
 		winners = new ArrayList<>();
 	}
-	public int getStatusCode() {
-
-		return statusCode;
-	}
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
 	public String getOutputMessage() {
 
-		return outputMessage;
+		return responseMessage;
 	}
 	public void setOutputMessage(String outputMessage) {
-		this.outputMessage = outputMessage;
+		this.responseMessage = outputMessage;
 	}
 	public void setBetsConnected(HashMap<Long, BetDTO> betsConnected) {
 		this.betsConnected = betsConnected;

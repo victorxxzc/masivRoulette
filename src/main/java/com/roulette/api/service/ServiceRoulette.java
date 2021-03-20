@@ -9,6 +9,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -55,79 +56,72 @@ public class ServiceRoulette {
 			request.setBetList(null);
 		}
 	}
-//	public ResponseDTO closeRoulette(Long id) {
-//		Optional<Roulette> optionalRoulette = rouletteRepository.findById(id);
-//		ResponseDTO output = new ResponseDTO();
-//		if (optionalRoulette.isPresent()) {
-//			Roulette roulette = optionalRoulette.get();
-//			roulette.setStatus(Constants.CLOSED);
-//			rouletteRepository.save(roulette);
-//			HashMap<Long, BetDTO> betsConnected = objectMapper.convertValue(roulette.getBetList(),
-//					new TypeReference<HashMap<Long, BetDTO>>() {
-//					});
-//			output = chooseWinner(betsConnected);
-//			output.setStatusCode(Constants.STATUS_OK);
-//			output.setOutputMessage(Constants.ROULETTE_CLOSED);
-//			output.setBetsConnected(betsConnected);		
-//		} else {
-//			output.setStatusCode(Constants.NOT_FOUND);
-//			output.setOutputMessage(Constants.ROULETTE_NOT_AVALILABLE);
-//		}
-//
-//		return output;
-//	}
-//	private ResponseDTO chooseWinner(HashMap<Long, BetDTO> betsDTO) {
-//		Long randomNumber = (long) (Math.random() * 36);
-//		ResponseDTO outputDTO = new ResponseDTO();
-//		outputDTO.setWinnerNumber(randomNumber);
-//		WinnerDTO winnerDTO = null;
-//		for (Map.Entry<Long, BetDTO> betDTO : betsDTO.entrySet()) {
-//			winner((BetDTO) betDTO);
-//			outputDTO.addWinner(winnerDTO);
-//		}
-//		
-//		return outputDTO;
-//	}
-//	private WinnerDTO winner(BetDTO betDTO) {
-//		WinnerDTO winnerDTO = new WinnerDTO();
-//		boolean isNumberSelected = isNumberSelected(betDTO);
-//		if(isNumberSelected && isWinnerNumber(betDTO)) {
-//			winnerDTO = new WinnerDTO(betDTO.getIdUser(), betDTO.getMoney() * 5);		
-//		}else if(isColorSelected(betDTO) && isWinnerColor(betDTO)) {
-//			winnerDTO = new WinnerDTO(betDTO.getIdUser(), betDTO.getMoney() * 1.8);
-//		}
-//		
-//		return winnerDTO;
-//	}
-//	private boolean isWinnerNumber(BetDTO bet) {
-//		Long randomNumber = (long) (Math.random() * 36);
-//		
-//		return bet.getNumber() == randomNumber ? true : false;
-//	}	
-//	private boolean isNumberSelected(BetDTO betDTO) {
-//		
-//		return betDTO.getNumber() != null ? true : false;
-//	}
-//	private boolean isWinnerColor(BetDTO betDTO) {
-//		Long randomNumber = (long) (Math.random() * 36);
-//		boolean isWinnerColor = false;
-//		if(betDTO.getColor().equalsIgnoreCase(Constants.RED) && randomNumber % 2 != 0) {
-//			isWinnerColor = true;
-//		} else if(betDTO.getColor().equalsIgnoreCase(Constants.RED) && randomNumber % 2 == 0) {
-//			 isWinnerColor = true;
-//		} 
-//		
-//		return isWinnerColor;
-//	}	
-//	private boolean isColorSelected(BetDTO betDTO) {
-//		
-//		return betDTO.getColor() != null ? true : false;
-//	}
-//	public List<RouletteDTO> listRoulettes() {		
-//		List<Roulette> outputDTO = new ArrayList<>();
-//		rouletteRepository.findAll().forEach(outputDTO::add);
-//		List<RouletteDTO> response = outputDTO.stream().map(roulette -> {return new RouletteDTO(roulette.getIdRoulette(),roulette.getBetList(),roulette.getStatus());}).collect(Collectors.toList());
-//		
-//		return response;
-//	}
+	public ResponseDTO closeRoulette(Long id) {
+		Optional<Roulette> respoRoulette = rouletteRepository.findById(id);
+		ResponseDTO response = new ResponseDTO();
+		if (respoRoulette.isPresent()) {
+			Roulette roulette = respoRoulette.get();
+			roulette.setStatus(Constants.CLOSED);
+			rouletteRepository.save(roulette);
+			HashMap<Long, BetDTO> betsConnected = objectMapper.convertValue(roulette.getBetList(),
+					new TypeReference<HashMap<Long, BetDTO>>() {
+					});
+			response = chooseWinner(betsConnected);	
+		} 
+		return response;
+	}
+	private ResponseDTO chooseWinner(HashMap<Long, BetDTO> betsDTO) {
+		Long numbers = (long) (Math.random() * 36);
+		ResponseDTO response = new ResponseDTO();
+		response.setWinnerNumber(numbers);
+		WinnerDTO winnerDTO = null;
+		for (Map.Entry<Long, BetDTO> betDTO : betsDTO.entrySet()) {
+			winner((BetDTO) betDTO);
+			response.addWinner(winnerDTO);
+		}
+		
+		return response;
+	}
+	private WinnerDTO winner(BetDTO betDTO) {
+		WinnerDTO winnerDTO = new WinnerDTO();
+		boolean numberSelected = isNumberSelected(betDTO);
+		if(numberSelected && isWinnerNumber(betDTO)) {
+			winnerDTO = new WinnerDTO(betDTO.getIdUser(), betDTO.getMoney() * 5);		
+		}else if(isColorSelected(betDTO) && isWinnerColor(betDTO)) {
+			winnerDTO = new WinnerDTO(betDTO.getIdUser(), betDTO.getMoney() * 1.8);
+		}
+		
+		return winnerDTO;
+	}
+	private boolean isWinnerNumber(BetDTO bet) {
+		Long numbers = (long) (Math.random() * 36);
+		
+		return bet.getNumber() == numbers ? true : false;
+	}	
+	private boolean isNumberSelected(BetDTO betDTO) {
+		
+		return betDTO.getNumber() != null ? true : false;
+	}
+	private boolean isWinnerColor(BetDTO betDTO) {
+		Long numbers = (long) (Math.random() * 36);
+		boolean winnerColor = false;
+		if(betDTO.getColor().equalsIgnoreCase(Constants.RED) && numbers % 2 != 0) {
+			winnerColor = true;
+		} else if(betDTO.getColor().equalsIgnoreCase(Constants.RED) && numbers % 2 == 0) {
+			 winnerColor = true;
+		} 
+		
+		return winnerColor;
+	}	
+	private boolean isColorSelected(BetDTO betDTO) {
+		
+		return betDTO.getColor() != null ? true : false;
+	}
+	public List<RouletteDTO> listRoulettes() {		
+		List<Roulette> outputDTO = new ArrayList<>();
+		rouletteRepository.findAll().forEach(outputDTO::add);
+		List<RouletteDTO> response = outputDTO.stream().map(roulette -> {return new RouletteDTO(roulette.getIdRoulette(),roulette.getBetList(),roulette.getStatus());}).collect(Collectors.toList());
+		
+		return response;
+	}
 }

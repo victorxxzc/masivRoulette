@@ -5,9 +5,6 @@ package com.roulette.api.util;
  *
  */
 public class Constants {
-	public static final int STATUS_OK = 200;
-	public static final int BAD_REQUEST = 400;
-	public static final int NOT_FOUND = 404;
 	public static final String ROULETTE_NOT_AVALILABLE = "Ruleta no disponible";
 	public static final String RED = "rojo";
 	public static final String BLACK = "negro";
@@ -20,13 +17,11 @@ public class Constants {
 	public static final String BET_ROULETTE_WAGER = "/apostar";
 	public static final String OPEN = "open";
 	public static final String CLOSED = "closed";
-	public static final String CLOSE_ROULETTE = "/close_roulette/{id}";
-	public static final String LIST_ROULETTES = "/list_roulettes";
+	public static final String CLOSE_ROULETTE = "/cerrarRuleta/{id}";
+	public static final String GET_ROULETTES = "/listarRoulettes";
 	public static final String MSG = "Mensaje";
 	public static final String RESPONSE_OK = "Solicitud exitosa";
 	public static final String ERROR = "ERROR";
 	public static final String MSG_BAD_REQUEST = "No se pudo realizar la solicitud";
 	public static final String ROULETTE = "Roulette";
-	
-	
 }

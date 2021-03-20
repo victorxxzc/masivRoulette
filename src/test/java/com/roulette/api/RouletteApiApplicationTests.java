@@ -24,26 +24,14 @@ import com.roulette.api.service.ServiceRoulette;
 import com.roulette.api.util.Constants;
 
 /**
- * Class that allows testing
+ * Test
  * 
- * @author Darwin Bonilla
- * @version 1.0
+ * @author Victor Buritica
  *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class RouletteApiApplicationTests {
-	@Autowired
-	private ServiceBet serviceBet;	
-	@MockBean
-	RouletteRepository repositoryMain;
-	@Autowired
-	private ServiceRoulette serviceRoulette;
-	@Test
 	public void createRouletteTest() {
-		Roulette roulette = new Roulette();
-		roulette.setIdRoulette(1L);
-		when(repositoryMain.save(any())).thenReturn(roulette);
-		assertThat(serviceRoulette.createRoulette()).isNotNull();
 	}
 }
